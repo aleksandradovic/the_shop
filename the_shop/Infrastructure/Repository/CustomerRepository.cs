@@ -18,12 +18,15 @@ namespace Infrastructure.Repository
             _context = context;
         }
 
-        public void Add(Customer customer)
+        public Customer Add(Customer customer)
         {
+            customer.Id = Guid.NewGuid().ToString();
             _context.Customers.Add(customer);
+            return customer;
+            
         }
 
-        public void AddOrder(int customerId, Order order)
+        public void AddOrder(string customerId, Order order)
         {
             var customer = _context.Customers.FirstOrDefault(c => c.Id == customerId);
 
@@ -43,12 +46,12 @@ namespace Infrastructure.Repository
             return _context.Customers.FirstOrDefault(c => c.Email == email);
         }
 
-        public Customer GetById(int id)
+        public Customer GetById(string id)
         {
             return _context.Customers.FirstOrDefault(c => c.Id == id);
         }
 
-        public void Remove(int id)
+        public void Remove(string id)
         {
             var customer = _context.Customers.FirstOrDefault(x => x.Id == id);
 

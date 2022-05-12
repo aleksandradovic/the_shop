@@ -11,6 +11,6 @@ namespace Application.Repositories
     public interface ICustomerRepository : IBaseRepository<Customer>
     {
         public Customer GetByEmail(string email);
-        public void AddOrder(int customerId, Order order);
+        public void AddOrder(string customerId, Order order);
     }
 }

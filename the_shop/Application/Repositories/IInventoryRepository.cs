@@ -11,9 +11,9 @@ namespace Application.Repositories
     public interface IInventoryRepository : IBaseRepository<Inventory>
     {
         public List<Inventory> GetByArticleCode(string articleCode);
-        public List<Inventory> GetByArticleIdWithFilter(int articleId, Func<Inventory, bool> func);
-        public bool HasArticle(int inventoryId, int articleId);
-        public void IncreaseQuantity(int inventoryId, int quantity = 1);
-        public void DecreaseQuantity(int inventoryId, int quantity = 1);
+        public List<Inventory> GetByArticleIdWithFilter(string articleId, Func<Inventory, bool> func);
+        public bool HasArticle(string inventoryId, string articleId);
+        public void IncreaseQuantity(string inventoryId, int quantity = 1);
+        public void DecreaseQuantity(string inventoryId, int quantity = 1);
     }
 }

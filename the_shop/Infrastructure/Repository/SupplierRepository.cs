@@ -18,9 +18,11 @@ namespace Repository.Repository
             _context = context;
         }
 
-        public void Add(Supplier supplier)
+        public Supplier Add(Supplier supplier)
         {
+            supplier.Id = Guid.NewGuid().ToString();
             _context.Suppliers.Add(supplier);
+            return supplier;
         }
 
         public List<Supplier> GetAll()
@@ -28,7 +30,7 @@ namespace Repository.Repository
             return _context.Suppliers.ToList();
         }
 
-        public Supplier GetById(int id)
+        public Supplier GetById(string id)
         {
             return _context.Suppliers.FirstOrDefault(s => s.Id == id);
         }
@@ -38,7 +40,7 @@ namespace Repository.Repository
             return _context.Suppliers.FirstOrDefault(s => s.Name == name);
         }
 
-        public void Remove(int id)
+        public void Remove(string id)
         {
             var supplier = _context.Suppliers.FirstOrDefault(s => s.Id == id);
 

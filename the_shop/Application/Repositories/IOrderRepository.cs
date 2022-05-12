@@ -10,6 +10,6 @@ namespace Application.Repositories
 {
     public interface IOrderRepository : IBaseRepository<Order>
     {
-        public List<Order> GetByCustomerId(int customerId);
+        public List<Order> GetByCustomerId(string customerId);
     }
 }

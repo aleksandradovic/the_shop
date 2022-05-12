@@ -8,8 +8,8 @@ namespace Domain.Entities
 {
     public class Order
     {
-        public int Id { get; set; }
-        public int CustomerId { get; set; }
+        public string Id { get; set; }
+        public string CustomerId { get; set; }
         public double TotalPrice { get; set; }
         public DateTime CreatedAt { get; set; }
 

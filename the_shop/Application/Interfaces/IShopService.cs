@@ -9,6 +9,7 @@ namespace Application.Interfaces
 {
     public interface IShopService
     {
-
+        List<Inventory> FindArticles(string articleId, double maxPrice, int quantity);
+        List<OrderItem> SellArticle(List<Inventory> inventories, int quantity);
     }
 }

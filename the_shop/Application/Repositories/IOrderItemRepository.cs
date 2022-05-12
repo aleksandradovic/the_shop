@@ -10,5 +10,6 @@ namespace Application.Repositories
 {
     public interface IOrderItemRepository : IBaseRepository<OrderItem>
     {
+        List<OrderItem> CreateOrderItems(List<Inventory> inventories, int quantity);
     }
 }

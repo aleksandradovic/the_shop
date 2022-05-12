@@ -18,12 +18,14 @@ namespace Repository.Repository
             _context = context;
         }
 
-        public void Add(Inventory inventory)
+        public Inventory Add(Inventory inventory)
         {
+            inventory.Id = Guid.NewGuid().ToString();
             _context.Inventories.Add(inventory);
+            return inventory;
         }
 
-        public void DecreaseQuantity(int inventoryId, int quantity = 1)
+        public void DecreaseQuantity(string inventoryId, int quantity = 1)
         {
             var inventory = _context.Inventories.FirstOrDefault(i => i.Id == inventoryId);
 
@@ -33,7 +35,7 @@ namespace Repository.Repository
             }
         }
 
-        public void IncreaseQuantity(int inventoryId, int quantity = 1)
+        public void IncreaseQuantity(string inventoryId, int quantity = 1)
         {
             var inventory = _context.Inventories.FirstOrDefault(i => i.Id == inventoryId);
 
@@ -53,22 +55,22 @@ namespace Repository.Repository
             return _context.Inventories.Where(i => i.Article.Code == articleCode).ToList();
         }
 
-        public List<Inventory> GetByArticleIdWithFilter(int articleId, Func<Inventory, bool> func)
+        public List<Inventory> GetByArticleIdWithFilter(string articleId, Func<Inventory, bool> func)
         {
             return _context.Inventories.Where(i => i.Article.Id == articleId).Where(func).ToList();
         }
 
-        public Inventory GetById(int id)
+        public Inventory GetById(string id)
         {
             return _context.Inventories.FirstOrDefault(i => i.Id == id);
         }
 
-        public bool HasArticle(int inventoryId, int articleId)
+        public bool HasArticle(string inventoryId, string articleId)
         {
             return _context.Inventories.FirstOrDefault(i => i.Id == inventoryId).ArticleId == articleId;
         }
 
-        public void Remove(int id)
+        public void Remove(string id)
         {
             var inventory = _context.Inventories.FirstOrDefault(i => i.Id == id);
 

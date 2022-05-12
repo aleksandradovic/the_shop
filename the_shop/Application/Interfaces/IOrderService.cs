@@ -9,6 +9,7 @@ namespace Application.Interfaces
 {
     public interface IOrderService
     {
-
+        
+        Order CreateOrder(List<OrderItem> orderItems, string customerId);
     }
 }

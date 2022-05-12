@@ -18,9 +18,11 @@ namespace Repository.Repository
             _context = context;
         }
 
-        public void Add(Article article)
+        public Article Add(Article article)
         {
+            article.Id = Guid.NewGuid().ToString();
             _context.Articles.Add(article);
+            return article;
         }
 
         public List<Article> GetAll()
@@ -33,12 +35,12 @@ namespace Repository.Repository
             return _context.Articles.FirstOrDefault(a => a.Code == code);
         }
 
-        public Article GetById(int id)
+        public Article GetById(string id)
         {
             return _context.Articles.FirstOrDefault(a => a.Id == id);
         }
 
-        public void Remove(int id)
+        public void Remove(string id)
         {
             var article = _context.Articles.Where(a => a.Id == id).FirstOrDefault();
 

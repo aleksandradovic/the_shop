@@ -8,9 +8,9 @@ namespace Domain.Entities
 {
     public class Inventory
     {
-        public int Id { get; set; }
-        public int ArticleId { get; set; }
-        public int SupplierId { get; set; }
+        public string Id { get; set; }
+        public string ArticleId { get; set; }
+        public string SupplierId { get; set; }
         public int Quantity { get; set; }
         public double Price { get; set; }
 

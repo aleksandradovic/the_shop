@@ -18,9 +18,11 @@ namespace Repository.Repository
             _context = context;
         }
 
-        public void Add(Order order)
+        public Order Add(Order order)
         {
+            order.Id = Guid.NewGuid().ToString();
             _context.Orders.Add(order);
+            return order; 
         }
 
         public List<Order> GetAll()
@@ -28,17 +30,17 @@ namespace Repository.Repository
             return _context.Orders.ToList();
         }
 
-        public List<Order> GetByCustomerId(int customerId)
+        public List<Order> GetByCustomerId(string customerId)
         {
             return _context.Orders.Where(o => o.CustomerId == customerId).ToList();
         }
 
-        public Order GetById(int id)
+        public Order GetById(string id)
         {
             return _context.Orders.FirstOrDefault(o => o.Id == id);
         }
 
-        public void Remove(int id)
+        public void Remove(string id)
         {
             var order = _context.Orders.FirstOrDefault(o => o.Id == id);
 

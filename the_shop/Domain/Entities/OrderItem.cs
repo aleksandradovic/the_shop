@@ -8,12 +8,13 @@ namespace Domain.Entities
 {
     public class OrderItem
     {
-        public int Id { get; set; }
-        public int InventoryId { get; set; }
-        public int ArticleId { get; set; }
+        public string Id { get; set; }
+        public string InventoryId { get; set; }
+        public string OrderId { get; set; }
         public double Price { get; set; }
-        public long Quantity { get; set; }
+        public int Quantity { get; set; }
 
         public Inventory Inventory { get; set; }
+        public Order Order { get; set; }
     }
 }
