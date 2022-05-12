@@ -5,3 +5,12 @@
 /.vs
 /the_shop/.vs
 /the_shop/the_shop/obj
+/the_shop/Application/bin/Debug/net6.0
+/the_shop/Application/obj
+/the_shop/Domain/bin/Debug/net6.0
+/the_shop/Domain/obj
+/the_shop/Infrastructure/obj
+/the_shop/Repository/bin/Debug/net6.0
+/the_shop/Repository/obj
+/the_shop/the_shop/bin/Debug/net5.0
+/the_shop/Infrastructure/bin/Debug/net6.0
