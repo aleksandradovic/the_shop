@@ -32,6 +32,12 @@ namespace Application.Services
             {
                 _logger.LogInformation($"None of the inventories has article {articleId} with maximum price {maxPrice}.");
             }
+            else if (inventories.Sum(i => i.Quantity) < quantity)
+            {
+                inventories = new List<Inventory>();
+                _logger.LogInformation($"Not enough (quantity: {quantity}) articles {articleId} with maximum price {maxPrice} on stock.");
+            }
+
             return inventories;
         }
 

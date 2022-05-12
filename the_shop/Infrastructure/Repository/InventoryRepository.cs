@@ -35,7 +35,11 @@ namespace Repository.Repository
             if (inventory != null && inventory.Quantity >= quantity)
             {
                 inventory.Quantity -= quantity;
+                return;
             }
+
+            _logger.LogInformation($"Failed decrementing inventory {inventoryId} quantity.");
+            throw new Exception("Failed decreasing inventory quantity");
         }
 
         public void IncreaseQuantity(string inventoryId, int quantity = 1)
@@ -45,7 +49,10 @@ namespace Repository.Repository
             if (inventory != null)
             {
                 inventory.Quantity += quantity;
+                return;
             }
+
+            _logger.LogInformation($"Failed incrementing inventory {inventoryId} quantity.");
         }
 
         public List<Inventory> GetAll()
@@ -60,7 +67,7 @@ namespace Repository.Repository
 
         public List<Inventory> GetByArticleIdWithFilter(string articleId, Func<Inventory, bool> func)
         {
-            return _context.Inventories.Where(i => i.Article.Id == articleId).Where(func).ToList();
+            return _context.Inventories.Where(i => i.ArticleId == articleId).ToList().Where(func).ToList();
         }
 
         public Inventory GetById(string id)

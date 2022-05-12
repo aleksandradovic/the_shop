@@ -27,6 +27,12 @@ namespace Application.Services
         {
             _logger.LogInformation($"Creating order for customer {customerId}.");
 
+            if(orderItems.Count == 0)
+            {
+                _logger.LogInformation($"Order creating for customer {customerId} failed. Order items list is empty.");
+                throw new InvalidDataException("Order items list is empty. Failed creating order.");
+            }
+
             // Create order
             var totalPrice = orderItems.Sum(oi => oi.Price * oi.Quantity);
             var order = _orderRepository.Add(new Order() { CustomerId = customerId, TotalPrice = totalPrice, CreatedAt = DateTime.Now, Items = orderItems });
