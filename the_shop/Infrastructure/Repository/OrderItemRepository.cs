@@ -1,5 +1,6 @@
 ﻿using Application.Repositories;
 using Domain.Entities;
+using Microsoft.Extensions.Logging;
 using Repository.Context;
 using System;
 using System.Collections.Generic;
@@ -13,11 +14,13 @@ namespace Repository.Repository
     {
         private readonly IInventoryRepository _inventoryRepository;
         private readonly InMemoryDbContext _context;
+        private readonly ILogger<OrderItemRepository> _logger;
 
-        public OrderItemRepository(IInventoryRepository inventoryRepository, InMemoryDbContext context)
+        public OrderItemRepository(IInventoryRepository inventoryRepository, InMemoryDbContext context, ILogger<OrderItemRepository> logger)
         {
             _inventoryRepository = inventoryRepository;
             _context = context;
+            _logger = logger;
         }
 
         public OrderItem Add(OrderItem orderItem)
@@ -41,8 +44,7 @@ namespace Repository.Repository
                 {
                     var orderItem = Add(new OrderItem() { InventoryId = inventory.Id, Price = inventory.Price });
 
-                    // If cannot get all resources from one inventory we will take all resources for one order item,
-                    // so we are creating order items for every inventory until we collect full quantity.
+                    // In case that one inventory does not have enough articles, get the rest from another inventory
                     var quantityFromCurrentInventory = inventory.Quantity >= quantity ? quantity : inventory.Quantity;
                     _inventoryRepository.DecreaseQuantity(inventory.Id, quantityFromCurrentInventory);
                        
@@ -61,6 +63,8 @@ namespace Repository.Repository
                 }
 
                 orderItems = new List<OrderItem>();
+
+                _logger.LogInformation("Not enough articles on stock.");
             }
 
             return orderItems;
@@ -83,6 +87,10 @@ namespace Repository.Repository
             if (orderItem != null)
             {
                 _context.OrderItems.Remove(orderItem);
+            }
+            else
+            {
+                _logger.LogInformation($"Failed deleting order item. Order item with id {id} does not exist.");
             }
         }
     }

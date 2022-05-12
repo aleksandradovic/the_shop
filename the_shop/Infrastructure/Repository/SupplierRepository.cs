@@ -1,5 +1,6 @@
 ﻿using Application.Repositories;
 using Domain.Entities;
+using Microsoft.Extensions.Logging;
 using Repository.Context;
 using System;
 using System.Collections.Generic;
@@ -12,10 +13,12 @@ namespace Repository.Repository
     public class SupplierRepository : ISupplierRepository
     {
         private readonly InMemoryDbContext _context;
+        private readonly ILogger<SupplierRepository> _logger;
 
-        public SupplierRepository(InMemoryDbContext context)
+        public SupplierRepository(InMemoryDbContext context, ILogger<SupplierRepository> logger)
         {
             _context = context;
+            _logger = logger;
         }
 
         public Supplier Add(Supplier supplier)
@@ -47,6 +50,10 @@ namespace Repository.Repository
             if(supplier != null)
             {
                 _context.Suppliers.Remove(supplier);
+            }
+            else
+            {
+                _logger.LogInformation($"Failed deleting supplier. Supplier with id {id} does not exist.");
             }
         }
     }

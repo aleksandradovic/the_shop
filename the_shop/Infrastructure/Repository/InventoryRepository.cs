@@ -6,16 +6,19 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 
 namespace Repository.Repository
 {
     public class InventoryRepository : IInventoryRepository
     {
         private readonly InMemoryDbContext _context;
+        private readonly ILogger<InventoryRepository> _logger;
 
-        public InventoryRepository(InMemoryDbContext context)
+        public InventoryRepository(InMemoryDbContext context, ILogger<InventoryRepository> logger)
         {
             _context = context;
+            _logger = logger;
         }
 
         public Inventory Add(Inventory inventory)
@@ -29,7 +32,7 @@ namespace Repository.Repository
         {
             var inventory = _context.Inventories.FirstOrDefault(i => i.Id == inventoryId);
 
-            if (inventory != null)
+            if (inventory != null && inventory.Quantity >= quantity)
             {
                 inventory.Quantity -= quantity;
             }
@@ -77,6 +80,10 @@ namespace Repository.Repository
             if(inventory != null)
             {
                 _context.Inventories.Remove(inventory);
+            }
+            else
+            {
+                _logger.LogInformation($"Failed deleting inventory. Inventory with id {id} does not exist.");
             }
         }
     }

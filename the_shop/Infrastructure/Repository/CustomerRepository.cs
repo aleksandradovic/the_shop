@@ -6,16 +6,19 @@ using System.Text;
 using System.Threading.Tasks;
 using Application.Repositories;
 using Domain.Entities;
+using Microsoft.Extensions.Logging;
 
 namespace Infrastructure.Repository
 {
     public class CustomerRepository : ICustomerRepository
     {
         private readonly InMemoryDbContext _context;
+        private readonly ILogger<CustomerRepository> _logger;
 
-        public CustomerRepository(InMemoryDbContext context)
+        public CustomerRepository(InMemoryDbContext context, ILogger<CustomerRepository> logger)
         {
             _context = context;
+            _logger = logger;
         }
 
         public Customer Add(Customer customer)
@@ -58,6 +61,10 @@ namespace Infrastructure.Repository
             if(customer != null)
             {
                 _context.Customers.Remove(customer);
+            }
+            else
+            {
+                _logger.LogInformation($"Failed deleting customer. Customer with id {id} does not exist.");
             }
         }
     }

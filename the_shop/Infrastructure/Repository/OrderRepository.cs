@@ -1,5 +1,6 @@
 ﻿using Application.Repositories;
 using Domain.Entities;
+using Microsoft.Extensions.Logging;
 using Repository.Context;
 using System;
 using System.Collections.Generic;
@@ -12,10 +13,12 @@ namespace Repository.Repository
     public class OrderRepository : IOrderRepository
     {
         private readonly InMemoryDbContext _context;
+        private readonly ILogger<OrderRepository> _logger;
 
-        public OrderRepository(InMemoryDbContext context)
+        public OrderRepository(InMemoryDbContext context, ILogger<OrderRepository> logger)
         {
             _context = context;
+            _logger = logger;
         }
 
         public Order Add(Order order)
@@ -47,6 +50,10 @@ namespace Repository.Repository
             if(order != null)
             {
                 _context.Orders.Remove(order);
+            }
+            else
+            {
+                _logger.LogInformation($"Failed deleting order. Order with id {id} does not exist.");
             }
         }
     }
