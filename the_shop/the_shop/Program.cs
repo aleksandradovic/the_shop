@@ -28,7 +28,7 @@ namespace the_shop
 			GetInstancesFromDI(host.Services);
 
 			logger.LogInformation("Starting");
-			var inventories = SearchForArticles("1", 105, 2);
+			var inventories = SearchForArticles("111", 105, 2);
 			var order = CreateOrders(inventories);
 
 			var inventories2 = SearchForArticles("10", 200, 4);

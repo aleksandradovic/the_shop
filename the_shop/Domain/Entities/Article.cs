@@ -8,8 +8,8 @@ namespace Domain.Entities
 {
 	public class Article
 	{
-		public string Id { get; set; }
-		public string Name { get; set; }
+		// Unique for each article
 		public string Code { get; set; }
+		public string Name { get; set; }
 	}
 }

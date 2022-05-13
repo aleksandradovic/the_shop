@@ -65,9 +65,9 @@ namespace Repository.Repository
             return _context.Inventories.Where(i => i.Article.Code == articleCode).ToList();
         }
 
-        public List<Inventory> GetByArticleIdWithFilter(string articleId, Func<Inventory, bool> func)
+        public List<Inventory> GetByArticleIdWithFilter(string articleCode, Func<Inventory, bool> func)
         {
-            return _context.Inventories.Where(i => i.ArticleId == articleId).ToList().Where(func).ToList();
+            return _context.Inventories.Where(i => i.ArticleCode == articleCode).ToList().Where(func).ToList();
         }
 
         public Inventory GetById(string id)
@@ -75,9 +75,9 @@ namespace Repository.Repository
             return _context.Inventories.FirstOrDefault(i => i.Id == id);
         }
 
-        public bool HasArticle(string inventoryId, string articleId)
+        public bool HasArticle(string inventoryId, string articleCode)
         {
-            return _context.Inventories.FirstOrDefault(i => i.Id == inventoryId).ArticleId == articleId;
+            return _context.Inventories.FirstOrDefault(i => i.Id == inventoryId).ArticleCode == articleCode;
         }
 
         public void Remove(string id)

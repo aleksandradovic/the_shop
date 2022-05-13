@@ -23,7 +23,6 @@ namespace Repository.Repository
 
         public Article Add(Article article)
         {
-            article.Id = Guid.NewGuid().ToString();
             _context.Articles.Add(article);
             return article;
         }
@@ -33,19 +32,15 @@ namespace Repository.Repository
             return _context.Articles.ToList();
         }
 
-        public Article GetByCode(string code)
+        // Id for article is article code
+        public Article GetById(string code)
         {
             return _context.Articles.FirstOrDefault(a => a.Code == code);
         }
 
-        public Article GetById(string id)
+        public void Remove(string code)
         {
-            return _context.Articles.FirstOrDefault(a => a.Id == id);
-        }
-
-        public void Remove(string id)
-        {
-            var article = _context.Articles.Where(a => a.Id == id).FirstOrDefault();
+            var article = _context.Articles.Where(a => a.Code == code).FirstOrDefault();
 
             if (article != null)
             {
@@ -53,7 +48,7 @@ namespace Repository.Repository
             }
             else
             {
-                _logger.LogInformation($"Failed deleting article. Article with id {id} does not exist.");
+                _logger.LogInformation($"Failed deleting article. Article with code {code} does not exist.");
             }
         }
     }

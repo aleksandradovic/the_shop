@@ -31,11 +31,11 @@ namespace the_shop.Data
         {
             return new List<Article>
             {
-                new Article { Id = "1", Code = "111", Name = "Article 1" },
-                new Article { Id = "2", Code = "222", Name = "Article 2" },
-                new Article { Id = "3", Code = "333", Name = "Article 3" },
-                new Article { Id = "4", Code = "444", Name = "Article 4" },
-                new Article { Id = "5", Code = "555", Name = "Article 5" }
+                new Article { Code = "111", Name = "Article 1" },
+                new Article { Code = "222", Name = "Article 2" },
+                new Article { Code = "333", Name = "Article 3" },
+                new Article { Code = "444", Name = "Article 4" },
+                new Article { Code = "555", Name = "Article 5" }
             };
         }
 
@@ -59,7 +59,7 @@ namespace the_shop.Data
 
             foreach (var article in articles)
             {
-                inventories.Add(new Inventory { Id = id.ToString(), ArticleId = article.Id, Price = price, Quantity = quantity });
+                inventories.Add(new Inventory { Id = id.ToString(), ArticleCode = article.Code, Price = price, Quantity = quantity });
                 quantity += 2;
                 price += 10;
                 id++;
