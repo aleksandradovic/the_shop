@@ -13,7 +13,6 @@ namespace the_shop
 	{
 		private static IShopService shopService;
 		private static IOrderService orderService;
-		private static InMemoryDbContext context;
 		private static ILogger<Program> logger;
 
 		private static void Main(string[] args)
@@ -22,17 +21,22 @@ namespace the_shop
 			var host = Startup.Start();
 
 			// Insert data
-			context = DataSetup.InsertData(host.Services);
+			DataSetup.InsertData(host.Services);
 
 			// Get instances to work with
 			GetInstancesFromDI(host.Services);
 
-			logger.LogInformation("Starting");
-			var inventories = SearchForArticles("111", 105, 2);
-			var order = CreateOrders(inventories);
+			// Successfull order
+			Shop("1", "333", 155, 2);
 
-			var inventories2 = SearchForArticles("10", 200, 4);
-			var order2 = CreateOrders(inventories2);
+			// Non existing article
+			Shop("2", "555", 200, 4);
+
+			// Not enough articles on stock
+			Shop("3", "222", 1000, 10);
+
+			// Order from multiple suppliers
+			Shop("3", "111", 150, 3);
 
 			Console.ReadLine();
 		}
@@ -44,18 +48,34 @@ namespace the_shop
 			logger = ActivatorUtilities.GetServiceOrCreateInstance<ILogger<Program>>(services);
 		}
 
-        private static List<Inventory> SearchForArticles(string articleId, double maxPrice, int quantity)
+        private static List<Inventory> SearchForArticles(string articleCode, double maxPrice, int quantity)
         {
-            var inventories = shopService.FindArticles(articleId, maxPrice, quantity);
+            var inventories = shopService.FindArticles(articleCode, maxPrice, quantity);
 			return inventories;
 		}
 
-        private static Order CreateOrders(List<Inventory> inventories)
+        private static Order CreateOrders(string customerId, int quantity, List<Inventory> inventories)
         {
-			var orderItems = shopService.SellArticle(inventories, 2);
-            var order = orderService.CreateOrder(orderItems, context.Customers[0].Id);
-
+			var orderItems = shopService.SellArticle(inventories, quantity);
+			var order = orderService.CreateOrder(orderItems, customerId);
 			return order;
-        }
+		}
+
+		private static void Shop(string customerId, string articleCode, double maxPrice, int quantity)
+        {
+            try
+            {
+				var inventories = SearchForArticles(articleCode, maxPrice, quantity);
+
+				var order = CreateOrders(customerId, quantity, inventories);
+				logger.LogInformation(order.ToString());
+				Console.WriteLine(order.ToString());
+				return;
+			}
+            catch
+            {
+				Console.WriteLine("Ordering failed.");
+			}
+		}
     }
 }

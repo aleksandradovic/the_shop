@@ -16,5 +16,10 @@ namespace Domain.Entities
         public Customer Customer { get; set; }
         public List<OrderItem> Items { get; set; } = new List<OrderItem>();
 
+        public override string ToString()
+        {
+            return $"Order contains {Items.Sum(i => i.Quantity)} items. Total price for order is {TotalPrice}.";
+        }
+
     }
 }

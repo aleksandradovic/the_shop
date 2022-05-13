@@ -27,25 +27,24 @@ namespace Application.Services
         {
             _logger.LogInformation($"Creating order for customer {customerId}.");
 
-            if(orderItems.Count == 0)
-            {
-                _logger.LogInformation($"Order creating for customer {customerId} failed. Order items list is empty.");
-                throw new InvalidDataException("Order items list is empty. Failed creating order.");
-            }
-
             // Create order
             var totalPrice = orderItems.Sum(oi => oi.Price * oi.Quantity);
             var order = _orderRepository.Add(new Order() { CustomerId = customerId, TotalPrice = totalPrice, CreatedAt = DateTime.Now, Items = orderItems });
 
             orderItems.ForEach(oi => oi.OrderId = order.Id);
-           
-            // Add order to customer
-            var customer = _customerRepository.GetById(customerId);
-            customer.Orders.Add(order);
 
-            _logger.LogInformation($"Created order for customer {customerId} with total items {orderItems.Count}.");
+            // Add order to customer
+            AddOrderToCustomer(customerId, order);
+
+            _logger.LogInformation($"Created order for customer {customerId} with total items {orderItems.Sum(oi => oi.Quantity)}.");
 
             return order;
+        }
+
+        private void AddOrderToCustomer(string customerId, Order order)
+        {
+            var customer = _customerRepository.GetById(customerId);
+            customer.Orders.Add(order);
         }
     }
 }

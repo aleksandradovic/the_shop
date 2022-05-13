@@ -53,13 +53,24 @@ namespace the_shop.Data
         {
             var articles = GetArticles();
             var inventories = new List<Inventory>();
-            var quantity = 5;
+            var quantity = 2;
             var price = 100;
             int id = 1;
 
             foreach (var article in articles)
             {
-                inventories.Add(new Inventory { Id = id.ToString(), ArticleCode = article.Code, Price = price, Quantity = quantity });
+                if(article.Code != "555")
+                {
+                    inventories.Add(new Inventory { Id = id.ToString(), ArticleCode = article.Code, Price = price, Quantity = quantity });
+                }
+
+                if (article.Code == "111")
+                {
+                    id++;
+                    price += 2;
+                    inventories.Add(new Inventory { Id = id.ToString(), ArticleCode = article.Code, Price = price, Quantity = quantity });
+                }
+
                 quantity += 2;
                 price += 10;
                 id++;
@@ -73,9 +84,9 @@ namespace the_shop.Data
             var inventories = GetInventories();
             var suppliers = new List<Supplier>();
 
-            suppliers.Add(new Supplier { Id = "1", Name = $"Supplier 1", Address = "Address 1", Inventories = inventories.GetRange(1,3) });
-            suppliers.Add(new Supplier { Id = "2", Name = $"Supplier 2", Address = "Address 2", Inventories = inventories });
-            suppliers.Add(new Supplier { Id = "3", Name = $"Supplier 3", Address = "Address 3", Inventories = inventories.GetRange(2,3) });
+            suppliers.Add(new Supplier { Id = "1", Name = $"Supplier 1", Address = "Address 1", Inventories = inventories.GetRange(1,2) });
+            suppliers.Add(new Supplier { Id = "2", Name = $"Supplier 2", Address = "Address 2", Inventories = inventories.GetRange(0,1) });
+            suppliers.Add(new Supplier { Id = "3", Name = $"Supplier 3", Address = "Address 3", Inventories = inventories.GetRange(3,2) });
 
             return suppliers;
         }

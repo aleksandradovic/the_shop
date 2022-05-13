@@ -23,19 +23,20 @@ namespace Application.Services
             _logger = logger;
         }
 
-        public List<Inventory> FindArticles(string articleId, double maxPrice, int quantity)
+        public List<Inventory> FindArticles(string articleCode, double maxPrice, int quantity)
         {
-            _logger.LogInformation($"Searching for article {articleId} with maximum price {maxPrice} and quantity {quantity}.");
-            var inventories = _inventoryRepository.GetByArticleIdWithFilter(articleId, a => a.Price <= maxPrice && quantity > 0).OrderBy(i => i.Price).ToList();
+            _logger.LogInformation($"Searching for article {articleCode} with maximum price {maxPrice} and quantity {quantity}.");
+            var inventories = _inventoryRepository.GetByArticleCodeWithFilter(articleCode, a => a.Price <= maxPrice && quantity > 0).OrderBy(i => i.Price).ToList();
 
             if (!inventories.Any())
             {
-                _logger.LogInformation($"None of the inventories has article {articleId} with maximum price {maxPrice}.");
+                _logger.LogInformation($"None of the inventories has article {articleCode} with maximum price {maxPrice}.");
+                throw new Exception($"None of the inventories has article {articleCode} with maximum price {maxPrice}.");
             }
             else if (inventories.Sum(i => i.Quantity) < quantity)
             {
-                inventories = new List<Inventory>();
-                _logger.LogInformation($"Not enough (quantity: {quantity}) articles {articleId} with maximum price {maxPrice} on stock.");
+                _logger.LogInformation($"Order creating failed. Not enough articles on stock.");
+                throw new Exception("Order creating failed. Not enough articles on stock.");
             }
 
             return inventories;
@@ -43,15 +44,54 @@ namespace Application.Services
 
         public List<OrderItem> SellArticle(List<Inventory> inventories, int quantity)
         {
-            _logger.LogInformation($"Creating order items.");
             List<OrderItem> orderItems = new List<OrderItem>();
 
-            if (inventories?.Count > 0)
+            foreach (var inventory in inventories)
             {
-                orderItems = _orderItemRepository.CreateOrderItems(inventories, quantity);
+                if (quantity <= 0)
+                {
+                    break;
+                }
+                else
+                {
+                    var orderItem = CreateOrderItem(inventory, ref quantity);
+                    orderItems.Add(orderItem);
+                }
+            }
+
+            if (quantity > 0)
+            {
+                UndoCreatingOrderItems(orderItems);
             }
 
             return orderItems;
+        }
+
+        private OrderItem CreateOrderItem(Inventory inventory, ref int quantity)
+        {
+            _logger.LogInformation($"Creating order items.");
+
+            var orderItem = _orderItemRepository.Add(new OrderItem() { InventoryId = inventory.Id, Price = inventory.Price });
+
+            // In case that one inventory does not have enough articles, get the rest from another inventory
+            var quantityFromCurrentInventory = inventory.Quantity >= quantity ? quantity : inventory.Quantity;
+            _inventoryRepository.DecreaseQuantity(inventory.Id, quantityFromCurrentInventory);
+
+            orderItem.Quantity = quantityFromCurrentInventory;
+            quantity -= quantityFromCurrentInventory;
+
+            return orderItem;
+        }
+
+        private void UndoCreatingOrderItems(List<OrderItem> orderItems)
+        {
+            foreach (var orderItem in orderItems)
+            {
+                _inventoryRepository.IncreaseQuantity(orderItem.InventoryId, orderItem.Quantity);
+                _orderItemRepository.Remove(orderItem.Id);
+            }
+
+            _logger.LogInformation("Not enough articles on stock.");
         }
     }
 }

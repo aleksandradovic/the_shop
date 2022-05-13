@@ -65,7 +65,7 @@ namespace Repository.Repository
             return _context.Inventories.Where(i => i.Article.Code == articleCode).ToList();
         }
 
-        public List<Inventory> GetByArticleIdWithFilter(string articleCode, Func<Inventory, bool> func)
+        public List<Inventory> GetByArticleCodeWithFilter(string articleCode, Func<Inventory, bool> func)
         {
             return _context.Inventories.Where(i => i.ArticleCode == articleCode).ToList().Where(func).ToList();
         }
