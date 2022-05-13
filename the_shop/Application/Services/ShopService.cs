@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
+using Application.Exceptions;
 
 namespace Application.Services
 {
@@ -30,13 +31,11 @@ namespace Application.Services
 
             if (!inventories.Any())
             {
-                _logger.LogInformation($"None of the inventories has article {articleCode} with maximum price {maxPrice}.");
-                throw new Exception($"None of the inventories has article {articleCode} with maximum price {maxPrice}.");
+                throw new ArticleNotFoundException($"None of the inventories has article {articleCode} with maximum price {maxPrice}.");
             }
             else if (inventories.Sum(i => i.Quantity) < quantity)
             {
-                _logger.LogInformation($"Order creating failed. Not enough articles on stock.");
-                throw new Exception("Order creating failed. Not enough articles on stock.");
+                throw new NotEnoughArticlesExceptions("Order creating failed. Not enough articles on stock.");
             }
 
             return inventories;

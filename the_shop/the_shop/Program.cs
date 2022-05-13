@@ -1,4 +1,5 @@
-﻿using Application.Interfaces;
+﻿using Application.Exceptions;
+using Application.Interfaces;
 using Domain.Entities;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -72,10 +73,16 @@ namespace the_shop
 				Console.WriteLine(order.ToString());
 				return;
 			}
-            catch
+            catch(ArticleNotFoundException ex)
             {
-				Console.WriteLine("Ordering failed.");
+				logger.LogInformation(ex, $"Article not found. {ex.ErrorMessage}");
 			}
+			catch(NotEnoughArticlesExceptions ex)
+            {
+				logger.LogInformation(ex, $"Not enough articles. {ex.ErrorMessage}");
+			}
+
+			Console.WriteLine("Ordering failed.");
 		}
-    }
+	}
 }
