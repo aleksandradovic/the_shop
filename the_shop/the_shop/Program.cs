@@ -1,5 +1,4 @@
-﻿using Application.Exceptions;
-using Application.Interfaces;
+﻿using Application.Interfaces;
 using Domain.Entities;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -58,31 +57,35 @@ namespace the_shop
         private static Order CreateOrders(string customerId, int quantity, List<Inventory> inventories)
         {
 			var orderItems = shopService.SellArticle(inventories, quantity);
-			var order = orderService.CreateOrder(orderItems, customerId);
-			return order;
+
+			if (orderItems.Count > 0)
+            {
+				var order = orderService.CreateOrder(orderItems, customerId);
+				return order;
+			}
+            else
+            {
+				return null;
+            }
 		}
 
 		private static void Shop(string customerId, string articleCode, double maxPrice, int quantity)
-        {
-            try
-            {
-				var inventories = SearchForArticles(articleCode, maxPrice, quantity);
+		{
+			var inventories = SearchForArticles(articleCode, maxPrice, quantity);
 
+			if (inventories.Count > 0)
+			{
 				var order = CreateOrders(customerId, quantity, inventories);
-				logger.LogInformation(order.ToString());
-				Console.WriteLine(order.ToString());
-				return;
-			}
-            catch(ArticleNotFoundException ex)
-            {
-				logger.LogInformation(ex, $"Article not found. {ex.ErrorMessage}");
-			}
-			catch(NotEnoughArticlesExceptions ex)
-            {
-				logger.LogInformation(ex, $"Not enough articles. {ex.ErrorMessage}");
-			}
 
-			Console.WriteLine("Ordering failed.");
+				if (order != null)
+				{
+					logger.LogInformation(order.ToString());
+					Console.WriteLine(order.ToString());
+					return;
+				}
+
+				Console.WriteLine("Ordering failed.");
+			}
 		}
 	}
 }

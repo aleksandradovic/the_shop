@@ -7,7 +7,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
-using Application.Exceptions;
 
 namespace Application.Services
 {
@@ -31,11 +30,14 @@ namespace Application.Services
 
             if (!inventories.Any())
             {
-                throw new ArticleNotFoundException($"None of the inventories has article {articleCode} with maximum price {maxPrice}.");
+                _logger.LogInformation($"None of the inventories has article {articleCode} with maximum price {maxPrice}.");
+                Console.WriteLine($"None of the inventories has article {articleCode} with maximum price {maxPrice}.");
             }
             else if (inventories.Sum(i => i.Quantity) < quantity)
             {
-                throw new NotEnoughArticlesExceptions("Order creating failed. Not enough articles on stock.");
+                inventories = new List<Inventory>();
+                _logger.LogInformation("Order creating failed. Not enough articles on stock.");
+                Console.WriteLine("Order creating failed. Not enough articles on stock.");
             }
 
             return inventories;
@@ -58,11 +60,6 @@ namespace Application.Services
                 }
             }
 
-            if (quantity > 0)
-            {
-                UndoCreatingOrderItems(orderItems);
-            }
-
             return orderItems;
         }
 
@@ -80,17 +77,6 @@ namespace Application.Services
             quantity -= quantityFromCurrentInventory;
 
             return orderItem;
-        }
-
-        private void UndoCreatingOrderItems(List<OrderItem> orderItems)
-        {
-            foreach (var orderItem in orderItems)
-            {
-                _inventoryRepository.IncreaseQuantity(orderItem.InventoryId, orderItem.Quantity);
-                _orderItemRepository.Remove(orderItem.Id);
-            }
-
-            _logger.LogInformation("Not enough articles on stock.");
         }
     }
 }
