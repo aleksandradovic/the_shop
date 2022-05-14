@@ -8,7 +8,7 @@ using Application.Repositories;
 using Repository.Context;
 using Microsoft.Extensions.Logging;
 
-namespace Repository.Repository
+namespace Infrastructure.Repository
 {
     public class ArticleRepository : IArticleRepository
     {

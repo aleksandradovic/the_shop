@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 
-namespace Repository.Repository
+namespace Infrastructure.Repository
 {
     public class InventoryRepository : IInventoryRepository
     {
@@ -55,7 +55,7 @@ namespace Repository.Repository
 
         public List<Inventory> GetByArticleCode(string articleCode)
         {
-            return _context.Inventories.Where(i => i.Article.Code == articleCode).ToList();
+            return _context.Inventories.Where(i => i.ArticleCode == articleCode).ToList();
         }
 
         public List<Inventory> GetByArticleCodeWithFilter(string articleCode, Func<Inventory, bool> func)
