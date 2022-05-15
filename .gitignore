@@ -19,3 +19,5 @@
 /the_shop/UnitTests.Repository/obj
 /the_shop/UnitTests.Service/bin/Debug/net6.0
 /the_shop/UnitTests.Service/obj
+/the_shop/IntegrationTests/bin/Debug/net6.0
+/the_shop/IntegrationTests/obj
