@@ -45,11 +45,11 @@ namespace IntegrationTests
             {
                 
                 Assert.NotNull(articleCode);
-                Assert.True(inventories.All(i => i.ArticleCode == articleCode));
+                Assert.True(inventories?.All(i => i.ArticleCode == articleCode));
             }
             else
             {
-                Assert.True(inventories.Count == 0);
+                Assert.True(inventories == null || inventories?.Count == 0);
             }
         }
 
@@ -69,7 +69,7 @@ namespace IntegrationTests
             {
                 var inventories = ShopService.FindArticles(articleCode[i], maxPrice[i], quantity[i]);
 
-                if (createOrderItems[i])
+                if (createOrderItems[i] && inventories != null)
                 {
                     var orderItems = ShopService.SellArticle(inventories, quantity[i]);
 
