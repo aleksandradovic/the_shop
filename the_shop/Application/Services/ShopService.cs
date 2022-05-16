@@ -26,6 +26,7 @@ namespace Application.Services
         public List<Inventory> FindArticles(string articleCode, double maxPrice, int quantity)
         {
             _logger.LogInformation($"Searching for article {articleCode} with maximum price {maxPrice} and quantity {quantity}.");
+            Console.WriteLine($"Searching for article {articleCode} with maximum price {maxPrice} and quantity {quantity}.");
             var inventories = _inventoryRepository.GetByArticleCodeWithFilter(articleCode, a => a.Price <= maxPrice && quantity > 0).OrderBy(i => i.Price).ToList();
 
             if (!inventories.Any())

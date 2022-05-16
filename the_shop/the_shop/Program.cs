@@ -28,15 +28,19 @@ namespace the_shop
 
 			// Successfull order
 			Shop("1", "333", 155, 2);
+			Console.WriteLine();
 
 			// Non existing article
 			Shop("2", "555", 200, 4);
+			Console.WriteLine();
 
 			// Not enough articles on stock
 			Shop("3", "222", 1000, 10);
+			Console.WriteLine();
 
 			// Order from multiple suppliers
 			Shop("3", "111", 150, 3);
+			Console.WriteLine();
 
 			Console.ReadLine();
 		}
