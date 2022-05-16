@@ -23,22 +23,21 @@ namespace Application.Services
             _logger = logger;
         }
 
-        public List<Inventory> FindArticles(string articleCode, double maxPrice, int quantity)
+        public List<Inventory>? FindArticles(string articleCode, double maxPrice, int quantity)
         {
             _logger.LogInformation($"Searching for article {articleCode} with maximum price {maxPrice} and quantity {quantity}.");
-            Console.WriteLine($"Searching for article {articleCode} with maximum price {maxPrice} and quantity {quantity}.");
+
             var inventories = _inventoryRepository.GetByArticleCodeWithFilter(articleCode, a => a.Price <= maxPrice && quantity > 0).OrderBy(i => i.Price).ToList();
 
             if (!inventories.Any())
             {
                 _logger.LogInformation($"None of the inventories has article {articleCode} with maximum price {maxPrice}.");
-                Console.WriteLine($"None of the inventories has article {articleCode} with maximum price {maxPrice}.");
+                return null;
             }
             else if (inventories.Sum(i => i.Quantity) < quantity)
             {
                 inventories = new List<Inventory>();
                 _logger.LogInformation("Order creating failed. Not enough articles on stock.");
-                Console.WriteLine("Order creating failed. Not enough articles on stock.");
             }
 
             return inventories;

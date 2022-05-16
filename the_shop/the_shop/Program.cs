@@ -75,9 +75,14 @@ namespace the_shop
 
 		private static void Shop(string customerId, string articleCode, double maxPrice, int quantity)
 		{
+			Console.WriteLine($"Searching for article {articleCode} with maximum price {maxPrice} and quantity {quantity}.");
 			var inventories = SearchForArticles(articleCode, maxPrice, quantity);
 
-			if (inventories.Count > 0)
+			if (inventories is null)
+            {
+				Console.WriteLine($"None of the inventories has article {articleCode} with maximum price {maxPrice}.");
+			}
+			else if (inventories.Count > 0)
 			{
 				var order = CreateOrders(customerId, quantity, inventories);
 
@@ -89,6 +94,10 @@ namespace the_shop
 				}
 
 				Console.WriteLine("Ordering failed.");
+			}
+            else
+            {
+				Console.WriteLine("Order creating failed. Not enough articles on stock.");
 			}
 		}
 	}
